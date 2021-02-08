@@ -7,4 +7,5 @@ public class MessageRegisterClient : MessageBase
 {
     public string clientName = "default";
     public int id = 0;
+    public GameObject client = null;
 }

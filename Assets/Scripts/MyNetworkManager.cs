@@ -8,7 +8,7 @@ public class MyNetworkManager : MonoBehaviour
     public bool isAtStartup = true;
     [SerializeField] Text connectedCount = null;
     [SerializeField] GameObject player = null;
-    Dictionary<int, GameObject> clients= new Dictionary<int, GameObject>();
+    Dictionary<int, string> clients= new Dictionary<int, string>();
 
     private void Awake()
     {
@@ -27,10 +27,8 @@ public class MyNetworkManager : MonoBehaviour
             Instantiate<GameObject>(player);
             Client _client = player.GetComponent<Client>();
             _client.SetName("Jacky");
-            int _id = Random.Range(0, 1000);
-            _client.SetId(_id);
-            clients.Add(_id, _client.gameObject);
-            _client.SetupClient();
+            
+            
 
         }
 
@@ -40,12 +38,9 @@ public class MyNetworkManager : MonoBehaviour
         if (connectedCount)
             connectedCount.text = $"Nombre de clients : {clients.Count}";
 
-        foreach(KeyValuePair<int,GameObject> _player in clients)
+        foreach(KeyValuePair<int, string> _player in clients)
         {
-            if (_player.Value.GetComponent<Client>().GetClient()==null)
-            { 
-               clients.Remove(_player.Key);
-            }
+            Debug.Log(NetworkClient.allClients.Count);
             
         }
     }
@@ -53,9 +48,9 @@ public class MyNetworkManager : MonoBehaviour
     {
         MessageRegisterClient _translate = netMsg.ReadMessage<MessageRegisterClient>();
         Debug.LogError(_translate.id);
-        Debug.Log(clients[_translate.id].GetComponent<Client>().GetClient());
+        //Debug.Log(clients[_translate.id].GetComponent<Client>().GetClient());
         //NetworkClient.allClients.Remove(clients[_translate.id].GetComponent<Client>().GetClient());
-        //clients.Remove(_translate.id);
+        clients.Remove(_translate.id);
         
 
     }
@@ -66,6 +61,7 @@ public class MyNetworkManager : MonoBehaviour
         NetworkServer.RegisterHandler(MsgType.Connect, OnConnected);
         NetworkServer.RegisterHandler(1234, OnReceiveName);
         NetworkServer.RegisterHandler(1235, RemoveClient);
+        NetworkServer.RegisterHandler(123, RemoveClient);
         isAtStartup = false;
     }
 
@@ -83,9 +79,15 @@ public class MyNetworkManager : MonoBehaviour
     {
         MessageRegisterClient _translate = _msg.ReadMessage<MessageRegisterClient>();
         Debug.Log(_translate.clientName);
+        clients.Add(_translate.id, _translate.clientName);
+        Debug.Log(_translate.id);
         //Debug.Log(_translate.client);
         //clients.Add(_translate.id, _translate.client);
         NetworkServer.SendToClient(1, 123, new MessageRegisterClient());
 
+    }
+    public void Test()
+    {
+        Debug.Log("ddd");
     }
 }

@@ -13,6 +13,7 @@ public class MyNetworkManager : MonoBehaviour
     private void Awake()
     {
         SetupServer();
+
         
     }
     private void Start()
@@ -27,9 +28,6 @@ public class MyNetworkManager : MonoBehaviour
             GameObject _object =  Instantiate<GameObject>(player);
             Client _client = player.GetComponent<Client>();
             _client.SetName("Jacky");
-
-
-
         }
 
     }
@@ -56,8 +54,7 @@ public class MyNetworkManager : MonoBehaviour
     }
     // Create a server and listen on a port
     public void SetupServer()
-    {
-        
+    { 
         NetworkServer.Listen(4444);
         NetworkServer.RegisterHandler(MsgType.Connect, OnConnected);
         NetworkServer.RegisterHandler(1234, OnReceiveName);

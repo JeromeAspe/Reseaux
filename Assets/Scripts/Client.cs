@@ -7,11 +7,11 @@ public class Client : MonoBehaviour
 {
     NetworkClient client = null;
     [SerializeField] string playerName = "player";
-    [SerializeField] int id = 0;
+    int id = 0;
 
     private void Start()
     {
-        SetupClient();
+        
     }
     private void Update()
     {
@@ -25,28 +25,35 @@ public class Client : MonoBehaviour
     {
         playerName = _name;
     }
+    public int GetId()
+    {
+        return id;
+
+    }
     public void SetId(int _id)
     {
         id = _id;
+        Debug.Log(id);
+
     }
     public void SetupClient()
     {
+        
         NetworkClient _client = new NetworkClient();
         client = _client;
-
-        //clients.Add(_client);
+        Debug.Log(id);
         _client.RegisterHandler(MsgType.Connect, OnConnected);
         _client.RegisterHandler(123, OnTest);
         _client.Connect("127.0.0.1", 4444);
         
-        //isAtStartup = false;
     }
     public void OnConnected(NetworkMessage netMsg)
     {
-        //Debug.Log("connected");
+
         MessageRegisterClient _msg = new MessageRegisterClient();
         _msg.clientName = playerName;
         _msg.id = id;
+        
         client.Send(1234, _msg);
         
         //Debug.Log(client.connection.connectionId);
@@ -56,8 +63,8 @@ public class Client : MonoBehaviour
         MessageRegisterClient _msg = new MessageRegisterClient();
         _msg.clientName = playerName;
         _msg.id = id;
-        client.Send(1235, _msg);
-        //client.Disconnect();
+        //client.Send(1235, _msg);
+        NetworkClient.allClients.Remove(GetClient());
 
     }
     void OnTest(NetworkMessage netMsg)

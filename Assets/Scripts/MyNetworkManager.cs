@@ -27,24 +27,37 @@ public class MyNetworkManager : MonoBehaviour
             Instantiate<GameObject>(player);
             Client _client = player.GetComponent<Client>();
             _client.SetName("Jacky");
-            int _id = Random.Range(0, int.MaxValue);
+            int _id = Random.Range(0, 1000);
             _client.SetId(_id);
             clients.Add(_id, _client.gameObject);
+            _client.SetupClient();
 
         }
-        Debug.Log(NetworkServer.connections.Count);
-        
+
     }
     void UpdateUI()
     {
         if (connectedCount)
             connectedCount.text = $"Nombre de clients : {clients.Count}";
+
+        foreach(KeyValuePair<int,GameObject> _player in clients)
+        {
+            if (_player.Value.GetComponent<Client>().GetClient()==null)
+            { 
+               clients.Remove(_player.Key);
+            }
+            
+        }
     }
     void RemoveClient(NetworkMessage netMsg)
     {
         MessageRegisterClient _translate = netMsg.ReadMessage<MessageRegisterClient>();
         Debug.LogError(_translate.id);
-        clients.Remove(_translate.id);
+        Debug.Log(clients[_translate.id].GetComponent<Client>().GetClient());
+        //NetworkClient.allClients.Remove(clients[_translate.id].GetComponent<Client>().GetClient());
+        //clients.Remove(_translate.id);
+        
+
     }
     // Create a server and listen on a port
     public void SetupServer()

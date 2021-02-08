@@ -54,7 +54,9 @@ public class MyNetworkManager : MonoBehaviour
     }
     // Create a server and listen on a port
     public void SetupServer()
-    { 
+    {
+        Debug.Log(NetworkServer.active);
+        if (NetworkServer.active) return;
         NetworkServer.Listen(4444);
         NetworkServer.RegisterHandler(MsgType.Connect, OnConnected);
         NetworkServer.RegisterHandler(1234, OnReceiveName);

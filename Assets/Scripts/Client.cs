@@ -48,6 +48,7 @@ public class Client : MonoBehaviour
         _msg.clientName = playerName;
         _msg.id = id;
         client.Send(1234, _msg);
+        
         //Debug.Log(client.connection.connectionId);
     }
     private void OnDestroy()
@@ -56,7 +57,8 @@ public class Client : MonoBehaviour
         _msg.clientName = playerName;
         _msg.id = id;
         client.Send(1235, _msg);
-       
+        //client.Disconnect();
+
     }
     void OnTest(NetworkMessage netMsg)
     {

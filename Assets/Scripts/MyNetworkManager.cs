@@ -1,10 +1,12 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
+using UnityEngine.UI;
 
 public class MyNetworkManager : MonoBehaviour
 {
     public bool isAtStartup = true;
+    [SerializeField] Text connectedCount = null;
     [SerializeField] GameObject player = null;
     Dictionary<int, GameObject> clients= new Dictionary<int, GameObject>();
 
@@ -15,7 +17,7 @@ public class MyNetworkManager : MonoBehaviour
     }
     private void Start()
     {
-        //InvokeRepeating("CheckForClients", 0, 2);
+        InvokeRepeating("UpdateUI", 0, 1);
         
     }
     void Update()
@@ -30,10 +32,14 @@ public class MyNetworkManager : MonoBehaviour
             clients.Add(_id, _client.gameObject);
 
         }
-        Debug.Log(clients.Count);
+        Debug.Log(NetworkServer.connections.Count);
         
     }
-
+    void UpdateUI()
+    {
+        if (connectedCount)
+            connectedCount.text = $"Nombre de clients : {clients.Count}";
+    }
     void RemoveClient(NetworkMessage netMsg)
     {
         MessageRegisterClient _translate = netMsg.ReadMessage<MessageRegisterClient>();

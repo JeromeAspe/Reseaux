@@ -6,7 +6,7 @@ public class MyNetworkManager : MonoBehaviour
 {
     public bool isAtStartup = true;
     [SerializeField] GameObject player = null;
-    Dictionary<int,Client> clients= new Dictionary<int, Client>();
+    Dictionary<int, GameObject> clients= new Dictionary<int, GameObject>();
 
     private void Awake()
     {
@@ -25,22 +25,20 @@ public class MyNetworkManager : MonoBehaviour
             Instantiate<GameObject>(player);
             Client _client = player.GetComponent<Client>();
             _client.SetName("Jacky");
-            _client.SetId(Random.Range(0, int.MaxValue));
+            int _id = Random.Range(0, int.MaxValue);
+            _client.SetId(_id);
+            clients.Add(_id, _client.gameObject);
 
         }
         Debug.Log(clients.Count);
         
     }
 
-    void CheckForClients()
+    void RemoveClient(NetworkMessage netMsg)
     {
-        foreach(KeyValuePair<int, Client> _client in clients)
-        {
-            //if ((!_client.Value) || !(_client.Value.GetClient().isConnected))
-            //{
-              //  clients.Remove(_client.Key);
-            //}
-        }
+        MessageRegisterClient _translate = netMsg.ReadMessage<MessageRegisterClient>();
+        Debug.LogError(_translate.id);
+        clients.Remove(_translate.id);
     }
     // Create a server and listen on a port
     public void SetupServer()
@@ -48,6 +46,7 @@ public class MyNetworkManager : MonoBehaviour
         NetworkServer.Listen(4444);
         NetworkServer.RegisterHandler(MsgType.Connect, OnConnected);
         NetworkServer.RegisterHandler(1234, OnReceiveName);
+        NetworkServer.RegisterHandler(1235, RemoveClient);
         isAtStartup = false;
     }
 
@@ -66,7 +65,7 @@ public class MyNetworkManager : MonoBehaviour
         MessageRegisterClient _translate = _msg.ReadMessage<MessageRegisterClient>();
         Debug.Log(_translate.clientName);
         //Debug.Log(_translate.client);
-        clients.Add(_translate.id, _translate.client);
+        //clients.Add(_translate.id, _translate.client);
         NetworkServer.SendToClient(1, 123, new MessageRegisterClient());
 
     }

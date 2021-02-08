@@ -20,6 +20,8 @@ public class MyNetworkManager : MonoBehaviour
     {
         InvokeRepeating("UpdateUI", 0, 1);
         
+        
+        
     }
     void Update()
     {
@@ -28,6 +30,12 @@ public class MyNetworkManager : MonoBehaviour
             GameObject _object =  Instantiate<GameObject>(player);
             Client _client = player.GetComponent<Client>();
             _client.SetName("Jacky");
+            NetworkServer.Spawn(_object);
+
+        }
+        if (Input.GetKeyDown(KeyCode.U))
+        {
+            NetworkServer.SpawnObjects();
         }
 
     }

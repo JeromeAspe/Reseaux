@@ -72,7 +72,7 @@ public class Client : MonoBehaviour
         _msg.id = id;
         GetClient().Send(1235, _msg);
         Debug.Log(GetClient().connection.connectionId);
-        NetworkClient.allClients.Remove(GetClient());
+        //NetworkClient.allClients.Remove(GetClient());
         
 
     }

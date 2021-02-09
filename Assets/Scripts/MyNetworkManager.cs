@@ -7,6 +7,7 @@ public class MyNetworkManager : MonoBehaviour
 {
     [SerializeField] Text connectedCount = null;
     [SerializeField] GameObject player = null;
+    [SerializeField] Camera cameraFollow = null;
     Dictionary<int, Player> clients= new Dictionary<int, Player>();
 
     private void Awake()
@@ -21,6 +22,7 @@ public class MyNetworkManager : MonoBehaviour
 
         GameObject _object = Instantiate<GameObject>(player);
         Client _client = player.GetComponent<Client>();
+        cameraFollow.gameObject.GetComponent<CameraBehaviour>().SetTarget(_object);
         _client.SetPlayer("Jacky");
 
     }

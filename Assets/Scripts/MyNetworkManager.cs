@@ -37,7 +37,9 @@ public class MyNetworkManager : MonoBehaviour
         {
             NetworkServer.SpawnObjects();
         }
-       
+        UpdateClientPositions();
+
+
 
     }
     void UpdateUI()
@@ -71,13 +73,19 @@ public class MyNetworkManager : MonoBehaviour
         NetworkServer.RegisterHandler(1234, OnReceiveName);
         NetworkServer.RegisterHandler(1235, RemoveClient);
         NetworkServer.RegisterHandler(1236, OnReceivePosition);
-        NetworkServer.RegisterHandler(123, RemoveClient);
         isAtStartup = false;
     }
 
-    void SetupClient()
+    void UpdateClientPositions()
     {
-
+        foreach(KeyValuePair<int,Player> _player in clients)
+        {
+            MessagePositionClient _msg = new MessagePositionClient();
+            _msg.clientPosition = _player.Value.GetPosition();
+            _msg.id = _player.Key;
+            NetworkServer.SendToAll(1237, _msg);
+        }
+        
     }
     // client function
     public void OnConnected(NetworkMessage netMsg)
@@ -92,7 +100,6 @@ public class MyNetworkManager : MonoBehaviour
         Debug.Log(_translate.clientPosition);
         clients.Add(_translate.id, new Player(_translate.clientName, _translate.clientPosition));
         Debug.Log(_translate.id);
-        NetworkServer.SendToClient(1, 123, new MessageRegisterClient());
 
     }
     public void OnReceivePosition(NetworkMessage _msg)
@@ -108,9 +115,5 @@ public class MyNetworkManager : MonoBehaviour
             Gizmos.DrawWireSphere(_player.Value.GetPosition(), 0.5f);
         }
         
-    }
-    public void Test()
-    {
-        Debug.Log("ddd");
     }
 }

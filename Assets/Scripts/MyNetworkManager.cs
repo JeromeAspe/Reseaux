@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class MyNetworkManager : MonoBehaviour
 {
+    [SerializeField] bool IsServer = true;
     [SerializeField] Text connectedCount = null;
     [SerializeField] GameObject player = null;
     [SerializeField] Camera cameraFollow = null;
@@ -12,7 +13,8 @@ public class MyNetworkManager : MonoBehaviour
 
     private void Awake()
     {
-        SetupServer();
+        if(IsServer)
+            SetupServer();
 
         
     }
@@ -32,7 +34,7 @@ public class MyNetworkManager : MonoBehaviour
     }
     void UpdateUI()
     {
-        if (connectedCount)
+        if (connectedCount && IsServer)
             connectedCount.text = $"Nombre de clients : {clients.Count}";
     }
     void RemoveClient(NetworkMessage netMsg)

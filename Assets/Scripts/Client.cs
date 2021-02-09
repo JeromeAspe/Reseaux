@@ -6,6 +6,7 @@ using UnityEngine.Networking;
 public class Client : NetworkBehaviour
 {
     NetworkClient client;
+    [SerializeField] Player playerData;
     [SerializeField] string playerName = "player";
     [SerializeField] int id = 0;
 
@@ -15,12 +16,16 @@ public class Client : NetworkBehaviour
     }
     private void Update()
     {
-        Debug.Log(id);
+        SendPosition();
     }
     public NetworkClient GetClient()
     {
         Debug.Log(client);
         return client;
+    }
+    public void SetPlayer(string _name)
+    {
+        playerData = new Player(_name, transform.position);
     }
     public void SetName(string _name)
     {
@@ -40,6 +45,7 @@ public class Client : NetworkBehaviour
         id = _id;
 
     }
+
     public void SetupClient()
     {
         
@@ -56,10 +62,18 @@ public class Client : NetworkBehaviour
 
 
     }
+    public void SendPosition()
+    {
+        MessagePositionClient _msg = new MessagePositionClient();
+        _msg.clientPosition = transform.position;
+        _msg.id = id;
+        client.Send(1236, _msg);
+    }
     public void OnConnected(NetworkMessage netMsg)
     {
         MessageRegisterClient _msg = new MessageRegisterClient();
-        _msg.clientName = playerName;
+        _msg.clientName = playerData.GetName();
+        _msg.clientPosition = transform.position;
         _msg.id = id;
         _msg.client = gameObject;
         client.Send(1234, _msg);
@@ -68,7 +82,8 @@ public class Client : NetworkBehaviour
     private void OnDestroy()
     {
         MessageRegisterClient _msg = new MessageRegisterClient();
-        _msg.clientName = playerName;
+        _msg.clientName = playerData.GetName();
+        _msg.clientPosition = transform.position;
         _msg.id = id;
         GetClient().Send(1235, _msg);
         Debug.Log(GetClient().connection.connectionId);

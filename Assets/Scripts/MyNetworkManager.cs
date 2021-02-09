@@ -5,7 +5,6 @@ using UnityEngine.UI;
 
 public class MyNetworkManager : MonoBehaviour
 {
-    public bool isAtStartup = true;
     [SerializeField] Text connectedCount = null;
     [SerializeField] GameObject player = null;
     Dictionary<int, Player> clients= new Dictionary<int, Player>();
@@ -45,12 +44,19 @@ public class MyNetworkManager : MonoBehaviour
     public void SetupServer()
     {
         if (NetworkServer.active) return;
-        NetworkServer.Listen(4444);
+        try
+        {
+            NetworkServer.Listen(4444);
+        }
+        catch (System.Exception)
+        {
+            Debug.Log("Server already initialized");
+        }
+        
         NetworkServer.RegisterHandler(MsgType.Connect, OnConnected);
         NetworkServer.RegisterHandler(1234, OnReceiveName);
         NetworkServer.RegisterHandler(1235, RemoveClient);
         NetworkServer.RegisterHandler(1236, OnReceivePosition);
-        isAtStartup = false;
     }
 
     void UpdateClientPositions()

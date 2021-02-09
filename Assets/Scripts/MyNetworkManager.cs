@@ -20,13 +20,16 @@ public class MyNetworkManager : MonoBehaviour
     }
     private void Start()
     {
-        InvokeRepeating("UpdateUI", 0, 1);
+       
 
+    }
+    public void InitClient(string _name)
+    {
+        InvokeRepeating("UpdateUI", 0, 1);
         GameObject _object = Instantiate<GameObject>(player);
         Client _client = player.GetComponent<Client>();
         cameraFollow.gameObject.GetComponent<CameraBehaviour>().SetTarget(_object);
-        _client.SetPlayer("Jacky");
-
+        _client.SetPlayer(_name);
     }
     void Update()
     {

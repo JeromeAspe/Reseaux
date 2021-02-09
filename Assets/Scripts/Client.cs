@@ -7,7 +7,6 @@ public class Client : MonoBehaviour
 {
     NetworkClient client;
     [SerializeField] Player playerData;
-    [SerializeField] string playerName = "player";
     [SerializeField] int id = 0;
     Dictionary<int, GameObject> players = new Dictionary<int, GameObject>();
 
@@ -26,11 +25,8 @@ public class Client : MonoBehaviour
     }
     public void SetPlayer(string _name)
     {
+        
         playerData = new Player(_name, transform.position);
-    }
-    public void SetName(string _name)
-    {
-        playerName = _name;
     }
     public void SetClient(NetworkClient _client)
     {
@@ -57,7 +53,7 @@ public class Client : MonoBehaviour
         
         _client.RegisterHandler(MsgType.Connect, OnConnected);
         _client.RegisterHandler(1237, GetClients);
-        _client.Connect("127.0.0.1", 4444);
+        _client.Connect("192.168.10.60", 4444);
 
 
 

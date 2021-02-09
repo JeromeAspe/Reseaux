@@ -9,7 +9,7 @@ public class Client : NetworkBehaviour
     [SerializeField] Player playerData;
     [SerializeField] string playerName = "player";
     [SerializeField] int id = 0;
-    Dictionary<int, Vector3> players = new Dictionary<int, Vector3>();
+    Dictionary<int, GameObject> players = new Dictionary<int, GameObject>();
 
     private void Start()
     {
@@ -65,14 +65,15 @@ public class Client : NetworkBehaviour
     public void GetClients(NetworkMessage _msg)
     {
         MessagePositionClient _translate = _msg.ReadMessage<MessagePositionClient>();
+        if (_translate.id == id) return;
         if (!players.ContainsKey(_translate.id))
         {
-            players.Add(_translate.id, _translate.clientPosition);
+            players.Add(_translate.id, GameObject.CreatePrimitive(PrimitiveType.Sphere));
+
+            
         }
-        else
-        {
-            players[_translate.id] = _translate.clientPosition;
-        }
+        players[_translate.id].transform.position = _translate.clientPosition;
+
 
     }
     public void SendPosition()
@@ -106,9 +107,9 @@ public class Client : NetworkBehaviour
     }
     private void OnDrawGizmos()
     {
-        foreach (KeyValuePair<int, Vector3> _player in players)
+        foreach (KeyValuePair<int, GameObject> _player in players)
         {
-            Gizmos.DrawWireSphere(_player.Value, 0.5f);
+            Gizmos.DrawWireSphere(_player.Value.transform.position, 0.5f);
         }
 
     }

@@ -19,20 +19,23 @@ public class MyNetworkManager : MonoBehaviour
     private void Start()
     {
         InvokeRepeating("UpdateUI", 0, 1);
-        
-        
-        
+
+        GameObject _object = Instantiate<GameObject>(player);
+        Client _client = player.GetComponent<Client>();
+        _client.SetPlayer("Jacky");
+        //NetworkServer.Spawn(_object);
+
     }
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.P))
+        /*if (Input.GetKeyDown(KeyCode.P))
         {
             GameObject _object =  Instantiate<GameObject>(player);
             Client _client = player.GetComponent<Client>();
             _client.SetPlayer("Jacky");
             NetworkServer.Spawn(_object);
 
-        }
+        }*/
         if (Input.GetKeyDown(KeyCode.U))
         {
             NetworkServer.SpawnObjects();

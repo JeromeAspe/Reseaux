@@ -98,7 +98,16 @@ public class MyNetworkManager : MonoBehaviour
     public void OnReceivePosition(NetworkMessage _msg)
     {
         MessagePositionClient _translate = _msg.ReadMessage<MessagePositionClient>();
-        Debug.Log(_translate.clientPosition);
+        clients[_translate.id] = new Player(clients[_translate.id].GetName(), _translate.clientPosition);
+        Debug.Log(clients[_translate.id].GetPosition());
+    }
+    private void OnDrawGizmos()
+    {
+        foreach(KeyValuePair<int,Player> _player in clients)
+        {
+            Gizmos.DrawWireSphere(_player.Value.GetPosition(), 0.5f);
+        }
+        
     }
     public void Test()
     {

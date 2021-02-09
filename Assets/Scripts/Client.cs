@@ -18,6 +18,7 @@ public class Client : MonoBehaviour
     {
         if(client!=null && client.isConnected)
             SendPosition();
+        
     }
     public NetworkClient GetClient()
     {
@@ -27,6 +28,7 @@ public class Client : MonoBehaviour
     {
         
         playerData = new Player(_name, transform.position);
+        
     }
     public void SetClient(NetworkClient _client)
     {

@@ -27,6 +27,7 @@ public class MyNetworkManager : MonoBehaviour
     {
         InvokeRepeating("UpdateUI", 0, 1);
         GameObject _object = Instantiate<GameObject>(player);
+        _object.GetComponent<Renderer>().material.color = Random.ColorHSV();
         Client _client = player.GetComponent<Client>();
         cameraFollow.gameObject.GetComponent<CameraBehaviour>().SetTarget(_object);
         _client.SetPlayer(_name);

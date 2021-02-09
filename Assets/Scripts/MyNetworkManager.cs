@@ -35,11 +35,11 @@ public class MyNetworkManager : MonoBehaviour
             _client.SetPlayer("Jacky");
             NetworkServer.Spawn(_object);
 
-        }*/
+        }
         if (Input.GetKeyDown(KeyCode.U))
         {
             NetworkServer.SpawnObjects();
-        }
+        }*/
         UpdateClientPositions();
 
 

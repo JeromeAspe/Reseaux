@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
-public class Client : NetworkBehaviour
+public class Client : MonoBehaviour
 {
     NetworkClient client;
     [SerializeField] Player playerData;

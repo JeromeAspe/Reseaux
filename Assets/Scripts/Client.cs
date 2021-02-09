@@ -17,7 +17,8 @@ public class Client : MonoBehaviour
     }
     private void Update()
     {
-        SendPosition();
+        if(client!=null && client.isConnected)
+            SendPosition();
     }
     public NetworkClient GetClient()
     {
@@ -54,7 +55,6 @@ public class Client : MonoBehaviour
         int _id = Random.Range(0, int.MaxValue);
         id = _id;
         
-        Debug.Log(id);
         _client.RegisterHandler(MsgType.Connect, OnConnected);
         _client.RegisterHandler(1237, GetClients);
         _client.Connect("127.0.0.1", 4444);
@@ -69,8 +69,6 @@ public class Client : MonoBehaviour
         if (!players.ContainsKey(_translate.id))
         {
             players.Add(_translate.id, GameObject.CreatePrimitive(PrimitiveType.Sphere));
-
-            
         }
         players[_translate.id].transform.position = _translate.clientPosition;
 
@@ -91,7 +89,6 @@ public class Client : MonoBehaviour
         _msg.id = id;
         _msg.client = gameObject;
         client.Send(1234, _msg);
-        Debug.Log(client.connection.connectionId);
     }
     private void OnDestroy()
     {
@@ -100,8 +97,6 @@ public class Client : MonoBehaviour
         _msg.clientPosition = transform.position;
         _msg.id = id;
         GetClient().Send(1235, _msg);
-        Debug.Log(GetClient().connection.connectionId);
-        //NetworkClient.allClients.Remove(GetClient());
         
 
     }

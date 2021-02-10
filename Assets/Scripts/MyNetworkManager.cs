@@ -83,6 +83,7 @@ public class MyNetworkManager : MonoBehaviour
             MessagePositionClient _msg = new MessagePositionClient();
             _msg.clientPosition = _player.Value.GetPosition();
             _msg.id = _player.Key;
+            _msg.clientName = _player.Value.GetName();
             _msg.clientColor = _player.Value.GetColor();
             NetworkServer.SendToAll(1237, _msg);
         }

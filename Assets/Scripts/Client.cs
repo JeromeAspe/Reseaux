@@ -8,7 +8,7 @@ public class Client : MonoBehaviour
     NetworkClient client;
     [SerializeField] Player playerData;
     [SerializeField] int id = 0;
-    Dictionary<int, GameObject> players = new Dictionary<int, GameObject>();
+    Dictionary<int, LocalPlayer> players = new Dictionary<int, LocalPlayer>();
 
     private void Start()
     {
@@ -70,9 +70,10 @@ public class Client : MonoBehaviour
         {
             GameObject _object = GameObject.CreatePrimitive(PrimitiveType.Sphere);
             _object.GetComponent<Renderer>().material.color = _translate.clientColor;
-            players.Add(_translate.id, _object);
+            players.Add(_translate.id, new LocalPlayer(_translate.clientName,_object));
+            Debug.LogError(players[_translate.id].GetName());
         }
-        players[_translate.id].transform.position = _translate.clientPosition;
+        players[_translate.id].GetBody().transform.position = _translate.clientPosition;
 
 
     }
@@ -109,9 +110,9 @@ public class Client : MonoBehaviour
     }
     private void OnDrawGizmos()
     {
-        foreach (KeyValuePair<int, GameObject> _player in players)
+        foreach (KeyValuePair<int, LocalPlayer> _player in players)
         {
-            Gizmos.DrawWireSphere(_player.Value.transform.position, 0.5f);
+            Gizmos.DrawWireSphere(_player.Value.GetBody().transform.position, 0.5f);
         }
 
     }

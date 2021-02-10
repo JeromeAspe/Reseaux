@@ -9,6 +9,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] TMP_InputField playerName = null;
     [SerializeField] MyNetworkManager server = null;
     [SerializeField] Button validate = null;
+    [SerializeField] Client client = null;
 
     static string lastName = "";
     public static string LastName => lastName;
@@ -17,6 +18,7 @@ public class UIManager : MonoBehaviour
 
     private void Start()
     {
+        
         validate.onClick.AddListener(ValidateSelection);
     }
 

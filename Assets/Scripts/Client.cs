@@ -2,13 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
+using TMPro;
 
 public class Client : MonoBehaviour
 {
     NetworkClient client;
     [SerializeField] Player playerData;
     [SerializeField] int id = 0;
+    [SerializeField] GameObject namePrefab = null;
     Dictionary<int, LocalPlayer> players = new Dictionary<int, LocalPlayer>();
+
+
 
     private void Start()
     {
@@ -18,6 +22,15 @@ public class Client : MonoBehaviour
     {
         if (client != null && client.isConnected)
             SendPosition();
+    }
+    public List<LocalPlayer> GetPlayers()
+    {
+        List<LocalPlayer> _list = new List<LocalPlayer>();
+        foreach(KeyValuePair<int,LocalPlayer> _players in players)
+        {
+            _list.Add(_players.Value);
+        }
+        return _list;
     }
     public NetworkClient GetClient()
     {
@@ -71,7 +84,10 @@ public class Client : MonoBehaviour
             GameObject _object = GameObject.CreatePrimitive(PrimitiveType.Sphere);
             _object.GetComponent<Renderer>().material.color = _translate.clientColor;
             players.Add(_translate.id, new LocalPlayer(_translate.clientName,_object));
-            Debug.LogError(players[_translate.id].GetName());
+            GameObject _text = Instantiate<GameObject>(namePrefab, _object.transform);
+            _text.transform.position = _object.transform.position + Vector3.up;
+            _text.GetComponent<TMP_Text>().text = players[_translate.id].GetName();
+            //Debug.LogError(players[_translate.id].GetName());
         }
         players[_translate.id].GetBody().transform.position = _translate.clientPosition;
 

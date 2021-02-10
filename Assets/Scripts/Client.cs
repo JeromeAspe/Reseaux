@@ -16,13 +16,8 @@ public class Client : MonoBehaviour
     }
     private void Update()
     {
-        if (client!=null && client.isConnected)
+        if (client != null && client.isConnected)
             SendPosition();
-        foreach(KeyValuePair<int,GameObject> _player in players)
-        {
-           Debug.LogError($"{_player.Key} => {_player.Value.GetComponent<Renderer>().material.color}");
-        }
-        Debug.Log(GetComponent<Renderer>().material.color);
         
     }
     public NetworkClient GetClient()
@@ -33,7 +28,6 @@ public class Client : MonoBehaviour
     {
         
         playerData = new Player(_name, transform.position,_color);
-        Debug.Log(playerData.GetColor());
         
     }
     public void SetClient(NetworkClient _client)

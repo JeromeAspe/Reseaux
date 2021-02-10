@@ -29,8 +29,6 @@ public class MyNetworkManager : MonoBehaviour
         GameObject _object = Instantiate<GameObject>(player);
         Color _color = Random.ColorHSV();
         _object.GetComponent<Renderer>().material.color = _color;
-        Debug.Log(_color);
-        Debug.Log(_object.GetComponent<Renderer>().material.color);
         Client _client = player.GetComponent<Client>();
         cameraFollow.gameObject.GetComponent<CameraBehaviour>().SetTarget(_object);
         _client.SetPlayer(_name,_color);
@@ -79,7 +77,6 @@ public class MyNetworkManager : MonoBehaviour
             _msg.clientPosition = _player.Value.GetPosition();
             _msg.id = _player.Key;
             _msg.clientColor = _player.Value.GetColor();
-            Debug.Log( $"{_player.Key} => {_player.Value.GetColor()}");
             NetworkServer.SendToAll(1237, _msg);
         }
         
@@ -94,7 +91,6 @@ public class MyNetworkManager : MonoBehaviour
     {
        
         MessageRegisterClient _translate = _msg.ReadMessage<MessageRegisterClient>();
-        Debug.Log(_translate.clientColor);
         clients.Add(_translate.id, new Player(_translate.clientName, _translate.clientPosition, _translate.clientColor));
 
     }

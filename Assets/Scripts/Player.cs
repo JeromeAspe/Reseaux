@@ -7,6 +7,7 @@ using System;
 public struct Player
 {
     [SerializeField] string name;
+    [SerializeField] Color color;
     public Vector3 position;
 
     public string GetName()
@@ -25,10 +26,18 @@ public struct Player
     {
         position = _position;
     }
-
-    public Player(string _name,Vector3 _position)
+    public Color GetColor()
+    {
+        return color;
+    }
+    public void SetColor(Color _color)
+    {
+        color = _color;
+    }
+    public Player(string _name,Vector3 _position,Color _color)
     {
         name = _name;
         position = _position;
+        color = _color;
     }
 }

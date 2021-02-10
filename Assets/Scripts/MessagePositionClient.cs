@@ -7,4 +7,5 @@ public class MessagePositionClient : MessageBase
 {
     public Vector3 clientPosition = Vector3.zero;
     public int id = 0;
+    public Color clientColor = Color.white;
 }

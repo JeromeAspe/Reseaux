@@ -27,14 +27,18 @@ public class MyNetworkManager : MonoBehaviour
     {
         InvokeRepeating("UpdateUI", 0, 1);
         GameObject _object = Instantiate<GameObject>(player);
-        _object.GetComponent<Renderer>().material.color = Random.ColorHSV();
+        Color _color = Random.ColorHSV();
+        _object.GetComponent<Renderer>().material.color = _color;
+        Debug.Log(_color);
+        Debug.Log(_object.GetComponent<Renderer>().material.color);
         Client _client = player.GetComponent<Client>();
         cameraFollow.gameObject.GetComponent<CameraBehaviour>().SetTarget(_object);
-        _client.SetPlayer(_name);
+        _client.SetPlayer(_name,_color);
     }
     void Update()
     {
-        UpdateClientPositions();
+        if (IsServer)
+            UpdateClientPositions();
     }
     void UpdateUI()
     {
@@ -74,6 +78,8 @@ public class MyNetworkManager : MonoBehaviour
             MessagePositionClient _msg = new MessagePositionClient();
             _msg.clientPosition = _player.Value.GetPosition();
             _msg.id = _player.Key;
+            _msg.clientColor = _player.Value.GetColor();
+            Debug.Log( $"{_player.Key} => {_player.Value.GetColor()}");
             NetworkServer.SendToAll(1237, _msg);
         }
         
@@ -86,14 +92,17 @@ public class MyNetworkManager : MonoBehaviour
     }
     public void OnReceiveName(NetworkMessage _msg)
     {
+       
         MessageRegisterClient _translate = _msg.ReadMessage<MessageRegisterClient>();
-        clients.Add(_translate.id, new Player(_translate.clientName, _translate.clientPosition));
+        Debug.Log(_translate.clientColor);
+        clients.Add(_translate.id, new Player(_translate.clientName, _translate.clientPosition, _translate.clientColor));
 
     }
     public void OnReceivePosition(NetworkMessage _msg)
     {
         MessagePositionClient _translate = _msg.ReadMessage<MessagePositionClient>();
-        clients[_translate.id] = new Player(clients[_translate.id].GetName(), _translate.clientPosition);
+        Color _clientColor = clients[_translate.id].GetColor();
+        clients[_translate.id] = new Player(clients[_translate.id].GetName(), _translate.clientPosition, _clientColor);
     }
     private void OnDrawGizmos()
     {

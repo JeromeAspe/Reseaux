@@ -16,18 +16,24 @@ public class Client : MonoBehaviour
     }
     private void Update()
     {
-        if(client!=null && client.isConnected)
+        if (client!=null && client.isConnected)
             SendPosition();
+        foreach(KeyValuePair<int,GameObject> _player in players)
+        {
+           Debug.LogError($"{_player.Key} => {_player.Value.GetComponent<Renderer>().material.color}");
+        }
+        Debug.Log(GetComponent<Renderer>().material.color);
         
     }
     public NetworkClient GetClient()
     {
         return client;
     }
-    public void SetPlayer(string _name)
+    public void SetPlayer(string _name,Color _color)
     {
         
-        playerData = new Player(_name, transform.position);
+        playerData = new Player(_name, transform.position,_color);
+        Debug.Log(playerData.GetColor());
         
     }
     public void SetClient(NetworkClient _client)
@@ -63,10 +69,14 @@ public class Client : MonoBehaviour
     public void GetClients(NetworkMessage _msg)
     {
         MessagePositionClient _translate = _msg.ReadMessage<MessagePositionClient>();
+        //Debug.Log(_translate.clientColor);
         if (_translate.id == id) return;
+        
         if (!players.ContainsKey(_translate.id))
         {
-            players.Add(_translate.id, GameObject.CreatePrimitive(PrimitiveType.Sphere));
+            GameObject _object = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            _object.GetComponent<Renderer>().material.color = _translate.clientColor;
+            players.Add(_translate.id, _object);
         }
         players[_translate.id].transform.position = _translate.clientPosition;
 
@@ -77,14 +87,19 @@ public class Client : MonoBehaviour
         MessagePositionClient _msg = new MessagePositionClient();
         _msg.clientPosition = transform.position;
         _msg.id = id;
+        _msg.clientColor = playerData.GetColor();
         client.Send(1236, _msg);
     }
     public void OnConnected(NetworkMessage netMsg)
     {
+        Color _color = GetComponent<Renderer>().material.color;
+        playerData.SetColor(_color);
+        //Debug.Log(GetComponent<Renderer>().material.color);
         MessageRegisterClient _msg = new MessageRegisterClient();
         _msg.clientName = playerData.GetName();
         _msg.clientPosition = transform.position;
         _msg.id = id;
+        _msg.clientColor = _color;
         _msg.client = gameObject;
         client.Send(1234, _msg);
     }

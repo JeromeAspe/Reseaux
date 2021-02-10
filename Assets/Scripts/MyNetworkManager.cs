@@ -34,7 +34,6 @@ public class MyNetworkManager : MonoBehaviour
         cameraFollow.gameObject.GetComponent<CameraBehaviour>().SetTarget(_object);
         _client.SetPlayer(_name,_color);
         lastName = _name;
-        Debug.Log("dd");
     }
     void Update()
     {
@@ -100,11 +99,6 @@ public class MyNetworkManager : MonoBehaviour
        
         MessageRegisterClient _translate = _msg.ReadMessage<MessageRegisterClient>();
         clients.Add(_translate.id, new Player(_translate.clientName, _translate.clientPosition, _translate.clientColor));
-        /*MessageRegisterClient _register = new MessageRegisterClient();
-        _register.clientColor = _translate.clientColor;
-        _register.clientPosition = _translate.clientPosition;
-        _register.clientName = lastName;
-        NetworkServer.SendToAll(4666,_register);*/
 
     }
     public void OnReceivePosition(NetworkMessage _msg)

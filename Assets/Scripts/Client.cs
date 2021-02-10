@@ -18,7 +18,6 @@ public class Client : MonoBehaviour
     {
         if (client != null && client.isConnected)
             SendPosition();
-        //Debug.LogError(playerData.GetName());
     }
     public NetworkClient GetClient()
     {
@@ -27,7 +26,6 @@ public class Client : MonoBehaviour
     public void SetPlayer(string _name,Color _color)
     {
         playerData = new Player(_name, transform.position,_color);
-        Debug.LogError(playerData.GetName());
 
     }
     public void SetClient(NetworkClient _client)
@@ -54,9 +52,7 @@ public class Client : MonoBehaviour
         id = _id;
         _client.RegisterHandler(MsgType.Connect, OnConnected);
         _client.RegisterHandler(1237, GetClients);
-        //_client.RegisterHandler(4666, ConfirmComponents);
         _client.Connect("192.168.10.60", 4444);
-        Debug.LogError(playerData.GetName());
 
 
 
@@ -69,7 +65,6 @@ public class Client : MonoBehaviour
     public void GetClients(NetworkMessage _msg)
     {
         MessagePositionClient _translate = _msg.ReadMessage<MessagePositionClient>();
-        //Debug.Log(_translate.clientColor);
         if (_translate.id == id) return;
         if (!players.ContainsKey(_translate.id))
         {

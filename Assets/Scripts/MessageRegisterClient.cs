@@ -9,5 +9,4 @@ public class MessageRegisterClient : MessageBase
     public Vector3 clientPosition = Vector3.zero;
     public int id = 0;
     public Color clientColor = Color.white;
-    public GameObject client = null;
 }

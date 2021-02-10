@@ -10,6 +10,9 @@ public class UIManager : MonoBehaviour
     [SerializeField] MyNetworkManager server = null;
     [SerializeField] Button validate = null;
 
+    static string lastName = "";
+    public static string LastName => lastName;
+
     public bool IsValid => playerName && server;
 
     private void Start()
@@ -20,6 +23,7 @@ public class UIManager : MonoBehaviour
     void ValidateSelection()
     {
         server.InitClient(playerName.text);
+        lastName = playerName.text;
         gameObject.SetActive(false);
     }
 

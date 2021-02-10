@@ -10,6 +10,7 @@ public class MyNetworkManager : MonoBehaviour
     [SerializeField] GameObject player = null;
     [SerializeField] Camera cameraFollow = null;
     Dictionary<int, Player> clients= new Dictionary<int, Player>();
+    string lastName = "";
 
     private void Awake()
     {
@@ -32,11 +33,18 @@ public class MyNetworkManager : MonoBehaviour
         Client _client = player.GetComponent<Client>();
         cameraFollow.gameObject.GetComponent<CameraBehaviour>().SetTarget(_object);
         _client.SetPlayer(_name,_color);
+        lastName = _name;
+        Debug.Log("dd");
     }
     void Update()
     {
         if (IsServer)
             UpdateClientPositions();
+        foreach(KeyValuePair<int,Player> _player in clients)
+        {
+
+            Debug.Log($"{_player.Key} => {_player.Value.GetName()}");
+        }
     }
     void UpdateUI()
     {
@@ -92,6 +100,11 @@ public class MyNetworkManager : MonoBehaviour
        
         MessageRegisterClient _translate = _msg.ReadMessage<MessageRegisterClient>();
         clients.Add(_translate.id, new Player(_translate.clientName, _translate.clientPosition, _translate.clientColor));
+        /*MessageRegisterClient _register = new MessageRegisterClient();
+        _register.clientColor = _translate.clientColor;
+        _register.clientPosition = _translate.clientPosition;
+        _register.clientName = lastName;
+        NetworkServer.SendToAll(4666,_register);*/
 
     }
     public void OnReceivePosition(NetworkMessage _msg)
